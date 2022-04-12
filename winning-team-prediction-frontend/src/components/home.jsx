@@ -15,10 +15,15 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+
+
 import Button from '@mui/material/Button';
 
 import teams from '../Common/teams.js';
-
+import scheduledWeeks from '../Common/scheduledWeeks';
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -33,8 +38,10 @@ const ExpandMore = styled((props) => {
 
 function Home(props) {
 
+    const [playOff, setPlayOff] = React.useState(true);
     const [homeTeam, setHomeTeam] = React.useState(teams[0]);
     const [awayTeam, setAwayTeam] = React.useState(teams[1]);
+    const [scheduledWeek, setScheduledWeek] = React.useState(scheduledWeeks[0]);
     const [homeTeamLogo, setHomeTeamLogo] = React.useState('/Logos/Arizona Cardinals.png');
     const [awayTeamLogo, setAwayTeamLogo] = React.useState('/Logos/Atlanta Falcons.png');
 
@@ -46,7 +53,10 @@ function Home(props) {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                homeTeam
+                homeTeam: homeTeam.team_id,
+                awayTeam: awayTeam.team_id,
+                scheduledWeek: scheduledWeek.id,
+                playOff: playOff
               }),
             }).then((res) => res.json());
 
@@ -68,6 +78,14 @@ function Home(props) {
         setAwayTeamLogo('/Logos/'+teamData.team_name+'.png')
         setAwayTeam(teamData);
     };
+
+    const handlePlayOffChange = (e) => {
+        setPlayOff(e.target.checked);
+    }
+
+    const handleChangeSwTeam = (e) => {
+        setScheduledWeek(e.target.value)
+    }
 
     return (
         <div className="container">
@@ -141,86 +159,35 @@ function Home(props) {
                     </div>
                 </div>
                 <div className="feature-flags">
-                    <div className="feature-dropdown">
-                        <Box sx={{ minWidth: 150 }}>
+                    <div className="feature-dropdown" style={{position: "relative", right: "130px"}}>
+                        <Box sx={{ minWidth: 300 }}>
                             <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">Feature 1</InputLabel>
+                                <InputLabel id="demo-simple-select-label">Scheduled Week</InputLabel>
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
-                                    value={awayTeam}
-                                    label="AwayTeam"
-                                    onChange={handleChangeAwayTeam}
+                                    value={scheduledWeek}
+                                    label="Scheduled Week"
+                                    onChange={handleChangeSwTeam}
                                 >
                                 {
-                                    teams.map((team) => {
-                                        return <MenuItem key={team.team_id} value={team}>{team.team_name}</MenuItem>
+                                    scheduledWeeks.map((week) => {
+                                        return <MenuItem key={week.id} value={week}>{week.value}</MenuItem>
                                     })
                                 }
                                 </Select>
                             </FormControl>
                         </Box>
                     </div>
-                    <div className="feature-dropdown">
-                        <Box sx={{ minWidth: 150 }}>
-                            <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">Feature 1</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={awayTeam}
-                                    label="AwayTeam"
-                                    onChange={handleChangeAwayTeam}
-                                >
-                                {
-                                    teams.map((team) => {
-                                        return <MenuItem key={team.team_id} value={team}>{team.team_name}</MenuItem>
-                                    })
-                                }
-                                </Select>
-                            </FormControl>
-                        </Box>
+                    <div className="feature-playoff">
+                        <div className="toggle-playoff">
+                            <FormGroup>
+                                <FormControlLabel control={<Switch defaultChecked color="secondary" onChange={handlePlayOffChange} />} label="PlayOff" />
+                            </FormGroup>
+                        </div>
                     </div>
-                    <div className="feature-dropdown">
-                        <Box sx={{ minWidth: 150 }}>
-                            <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">Feature 1</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={awayTeam}
-                                    label="AwayTeam"
-                                    onChange={handleChangeAwayTeam}
-                                >
-                                {
-                                    teams.map((team) => {
-                                        return <MenuItem key={team.team_id} value={team}>{team.team_name}</MenuItem>
-                                    })
-                                }
-                                </Select>
-                            </FormControl>
-                        </Box>
-                    </div>
-                    <div className="feature-dropdown">
-                        <Box sx={{ minWidth: 150 }}>
-                            <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">Feature 1</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={awayTeam}
-                                    label="AwayTeam"
-                                    onChange={handleChangeAwayTeam}
-                                >
-                                {
-                                    teams.map((team) => {
-                                        return <MenuItem key={team.team_id} value={team}>{team.team_name}</MenuItem>
-                                    })
-                                }
-                                </Select>
-                            </FormControl>
-                        </Box>
-                    </div>
+
+
                 </div>
             </div>
             <div style={{textAlign:"center", margin: "20px", marginBottom: '50px'}}>
