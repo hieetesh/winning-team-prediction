@@ -81,20 +81,24 @@ function Home(props) {
         let teamData = event.target.value;
         setHomeTeamLogo('/Logos/'+teamData.team_name+'.png')
         setHomeTeam(teamData);
+        setHomeTeamWon(null);
     };
 
     const handleChangeAwayTeam = (event) => {
         let teamData = event.target.value;
         setAwayTeamLogo('/Logos/'+teamData.team_name+'.png')
         setAwayTeam(teamData);
+        setHomeTeamWon(null);
     };
 
     const handlePlayOffChange = (e) => {
         setPlayOff(e.target.checked);
+        setHomeTeamWon(null);
     }
 
     const handleChangeSwTeam = (e) => {
         setScheduledWeek(e.target.value)
+        setHomeTeamWon(null);
     }
 
     return (
