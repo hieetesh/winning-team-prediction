@@ -38,12 +38,14 @@ const ExpandMore = styled((props) => {
 
 function Home(props) {
 
+    const [homeTeamWon, setHomeTeamWon] = React.useState(null)
     const [playOff, setPlayOff] = React.useState(true);
     const [homeTeam, setHomeTeam] = React.useState(teams[0]);
     const [awayTeam, setAwayTeam] = React.useState(teams[1]);
     const [scheduledWeek, setScheduledWeek] = React.useState(scheduledWeeks[0]);
     const [homeTeamLogo, setHomeTeamLogo] = React.useState('/Logos/Arizona Cardinals.png');
     const [awayTeamLogo, setAwayTeamLogo] = React.useState('/Logos/Atlanta Falcons.png');
+
 
     const handlePredictClick = async() => {
         try {
@@ -53,8 +55,10 @@ function Home(props) {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                homeTeam: homeTeam.team_id,
-                awayTeam: awayTeam.team_id,
+                homeTeamId: homeTeam.team_id,
+                homeTeamName: homeTeam.team_name,
+                awayTeamId: awayTeam.team_id,
+                awayTeamName: awayTeam.team_name,
                 scheduledWeek: scheduledWeek.id,
                 playOff: playOff
               }),
@@ -62,6 +66,12 @@ function Home(props) {
 
             console.log("result", result);
 
+            if(result.prediction === 1){
+                setHomeTeamWon(1)
+            }else{
+                console.log("hre",result.prediction )
+                setHomeTeamWon(0)
+            }
           } catch (error) {
             console.log(error)
           }
@@ -192,7 +202,12 @@ function Home(props) {
             </div>
             <div style={{textAlign:"center", margin: "20px", marginBottom: '50px'}}>
             <Button variant="contained" style={{backgroundColor:"#4B0082"}} onClick={()=>{handlePredictClick()}}>Predict</Button>
-
+            <h1>
+                {
+                    homeTeamWon == 1 && "Home Team will win the game" ||
+                    homeTeamWon == 0 && "Away team will win the game."
+                }
+            </h1>
             </div>
             <div style={{width: "100%", height: "50px"}}>
 
